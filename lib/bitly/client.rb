@@ -5,21 +5,55 @@ require 'uri'
 module Bitly
   API_URL     = 'http://api.bit.ly/'
   API_VERSION = '2.0.1'
+  @@version = 2
+  
+  def self.configure
+    yield self if block_given?
+  end
 
-  def self.new(login, api_key)
-    if @version == 3
-      Bitly::V3::Client.new(login, api_key)
+  def self.new(login=nil, api_key=nil)
+    unless login.nil? or api_key.nil?
+      self.login = login
+      self.api_key = api_key
+    end
+    
+    if self.version == 3
+      Bitly::V3::Client.new(self.login, self.api_key)
     else
-      Bitly::Client.new(login,api_key)
+      Bitly::Client.new(self.login, self.api_key)
     end
   end
   
+  def self.login
+    @@login
+  end
+  
+  def self.login= login
+    @@login = login
+  end
+  
+  def self.api_key
+    @@api_key
+  end
+  
+  def self.api_key= api_key
+    @@api_key = api_key
+  end
+  
+  def self.version
+    @@version
+  end
+  
+  def self.version= version
+    @@version = version
+  end
+  
   def self.use_api_version_3
-    @version = 3
+    @@version = 3
   end
   
   def self.use_api_version_2
-    @version = 2
+    @@version = 2
   end
 
   class Client

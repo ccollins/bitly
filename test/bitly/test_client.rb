@@ -7,6 +7,50 @@ class TestClient < Test::Unit::TestCase
       assert_equal Bitly::Client, b.class
     end
   end
+  
+  context "initializing the bitly client" do
+    should "respond to configure" do
+      assert_respond_to Bitly, :configure
+    end
+    
+    context "with a configure block" do
+      setup do
+        Bitly.configure do |config|
+          config.version = 200
+          config.login = 'mytest'
+          config.api_key = 'mytest'
+        end
+      end
+      
+      should "set version, login and api_key" do
+        assert_equal Bitly.version, 200
+        assert_equal Bitly.login, 'mytest'
+        assert_equal Bitly.api_key, 'mytest'
+      end
+    end
+    
+    should "set and retrieve version" do
+      assert_respond_to Bitly, :version
+      assert_respond_to Bitly, :version=
+      Bitly.version = 100
+      assert_equal Bitly.version, 100
+    end
+    
+    should "set and retrieve login" do
+      assert_respond_to Bitly, :login
+      assert_respond_to Bitly, :login=
+      Bitly.login = 'tester'
+      assert_equal Bitly.login, 'tester'
+    end
+    
+    should "set and retrieve api_key" do
+      assert_respond_to Bitly, :api_key
+      assert_respond_to Bitly, :api_key=
+      Bitly.api_key = 'tester'
+      assert_equal Bitly.api_key, 'tester'
+    end
+  end
+  
   context "using the bitly client" do
     setup do
       @bitly = Bitly.new(login, api_key)
